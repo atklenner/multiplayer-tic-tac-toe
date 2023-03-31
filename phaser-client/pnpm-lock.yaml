@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@colyseus/schema': ^1.0.45
   '@typescript-eslint/eslint-plugin': ^5.40.0
   '@typescript-eslint/parser': ^5.40.0
   colyseus.js: ^0.14.13
@@ -10,6 +11,7 @@ specifiers:
   vite: ^3.1.0
 
 dependencies:
+  '@colyseus/schema': 1.0.45
   colyseus.js: 0.14.13
   phaser: 3.55.2
 
