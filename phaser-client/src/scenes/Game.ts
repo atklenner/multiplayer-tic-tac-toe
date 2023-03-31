@@ -3,6 +3,8 @@ import type Server from "../services/Server";
 import ITicTacToeState from "../../../types/ITicTacToeState";
 
 export default class Game extends Phaser.Scene {
+  private server?: Server;
+
   constructor() {
     super("game");
   }
@@ -10,7 +12,14 @@ export default class Game extends Phaser.Scene {
   async create(data: { server: Server }) {
     const { server } = data;
 
+    this.server = server;
+
+    if (!this.server) {
+      throw new Error("server instance missing");
+    }
+
     await server.join();
+
     server.onceStateChanged(this.createBoard, this);
   }
 
@@ -22,7 +31,12 @@ export default class Game extends Phaser.Scene {
     let x = width * 0.5 - cellSize - cellGap;
     let y = height * 0.5 - cellSize - cellGap;
     state.board.forEach((cellState, idx) => {
-      this.add.rectangle(x, y, cellSize, cellSize, 0xffffff);
+      this.add
+        .rectangle(x, y, cellSize, cellSize, 0xffffff)
+        .setInteractive()
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+          this.server?.makeSelection(idx);
+        });
 
       if ((idx + 1) % 3 === 0) {
         y += cellSize + cellGap;
