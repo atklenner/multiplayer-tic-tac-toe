@@ -16,9 +16,7 @@ export default class Server {
   }
 
   async join() {
-    this.room = await this.client.joinOrCreate<ITicTacToeState & Schema>(
-      "tic-tac-toe"
-    );
+    this.room = await this.client.joinOrCreate<ITicTacToeState>("tic-tac-toe");
 
     this.room.onStateChange.once((state) => {
       this.events.emit("once-state-changed", state);
@@ -26,8 +24,22 @@ export default class Server {
 
     this.room.state.onChange = (changes) => {
       changes.forEach((change) => {
-        console.log(change);
+        const { field, value } = change;
+        switch (field) {
+          case "":
+            this.events.emit("", value);
+            break;
+
+          default:
+            break;
+        }
       });
+    };
+
+    this.room.state.board.onChange = (item, idx) => {
+      // item: player
+      // idx: board cell index
+      this.events.emit("board-changed", item, idx);
     };
   }
 
@@ -43,5 +55,9 @@ export default class Server {
 
   onceStateChanged(cb: (state: ITicTacToeState) => void, context?: any) {
     this.events.once("once-state-changed", cb, context);
+  }
+
+  onBoardChanged(cb: (cell: number, index: number) => void, context?: any) {
+    this.events.on("board-changed", cb, context);
   }
 }

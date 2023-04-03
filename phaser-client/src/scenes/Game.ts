@@ -1,12 +1,17 @@
 import Phaser from "phaser";
 import type Server from "../services/Server";
-import ITicTacToeState from "../../../types/ITicTacToeState";
+import ITicTacToeState, { Cell } from "../../../types/ITicTacToeState";
 
 export default class Game extends Phaser.Scene {
   private server?: Server;
+  private cells: { display: Phaser.GameObjects.Rectangle; value: Cell }[] = [];
 
   constructor() {
     super("game");
+  }
+
+  init() {
+    this.cells = [];
   }
 
   async create(data: { server: Server }) {
@@ -21,6 +26,7 @@ export default class Game extends Phaser.Scene {
     await server.join();
 
     server.onceStateChanged(this.createBoard, this);
+    server.onBoardChanged(this.handleBoardChanged, this);
   }
 
   private createBoard(state: ITicTacToeState) {
@@ -31,12 +37,14 @@ export default class Game extends Phaser.Scene {
     let x = width * 0.5 - cellSize - cellGap;
     let y = height * 0.5 - cellSize - cellGap;
     state.board.forEach((cellState, idx) => {
-      this.add
+      const cell = this.add
         .rectangle(x, y, cellSize, cellSize, 0xffffff)
         .setInteractive()
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
           this.server?.makeSelection(idx);
         });
+
+      this.cells.push({ display: cell, value: cellState });
 
       if ((idx + 1) % 3 === 0) {
         y += cellSize + cellGap;
@@ -45,5 +53,22 @@ export default class Game extends Phaser.Scene {
         x += cellSize + cellGap;
       }
     });
+  }
+
+  private handleBoardChanged(newValue: Cell, idx: number) {
+    const cell = this.cells[idx];
+    if (cell.value !== newValue) {
+      switch (newValue) {
+        case Cell.X:
+          this.add
+            .star(cell.display.x, cell.display.y, 4, 4, 60, 0x0000ff)
+            .setAngle(45);
+          break;
+        case Cell.O:
+          this.add.circle(cell.display.x, cell.display.y, 50, 0x0000ff);
+          break;
+      }
+      cell.value = newValue;
+    }
   }
 }
