@@ -2,6 +2,7 @@ import { Command } from "@colyseus/command";
 import { Client } from "colyseus";
 import { Cell } from "../../../types/ITicTacToeState";
 import TicTacToe from "../rooms/TicTacToe";
+import NextTurnCommand from "./NextTurnCommand";
 
 type Payload = {
   client: Client;
@@ -19,5 +20,7 @@ export default class PlayerSelectionCommand extends Command<
     const cellValue = clientIndex === 0 ? Cell.X : Cell.O;
 
     this.room.state.board[index] = cellValue;
+
+    return [new NextTurnCommand()];
   }
 }
