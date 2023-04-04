@@ -1,0 +1,5 @@
+export enum Events {
+  OnceStateChange = "once-state-changed",
+  BoardChange = "board-changed",
+  PlayerTurnChange = "player-turn-changed",
+}
