@@ -27,6 +27,7 @@ export default class Game extends Phaser.Scene {
 
     server.onceStateChanged(this.createBoard, this);
     server.onBoardChanged(this.handleBoardChanged, this);
+    server.onPlayerTurnChanged(this.handlePlayerTurnChanged, this);
   }
 
   private createBoard(state: ITicTacToeState) {
@@ -69,6 +70,12 @@ export default class Game extends Phaser.Scene {
           break;
       }
       cell.value = newValue;
+    } else {
+      console.log("cell already has value");
     }
+  }
+
+  private handlePlayerTurnChanged(playerIndex: number) {
+    console.log(playerIndex);
   }
 }
