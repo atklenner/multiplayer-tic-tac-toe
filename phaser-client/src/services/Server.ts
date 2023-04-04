@@ -48,10 +48,10 @@ export default class Server {
       });
     };
 
-    this.room.state.board.onChange = (item, idx) => {
+    this.room.state.board.onChange = (item, idx: number) => {
       // item: player
       // idx: board cell index
-      this.events.emit("board-changed", item, idx);
+      this.events.emit(Events.BoardChange, item, idx);
     };
   }
 
@@ -62,14 +62,23 @@ export default class Server {
       return;
     }
 
+    if (this.playerIndex !== this.room.state.activePlayer) {
+      console.log("not your turn!");
+      return;
+    }
+
     this.room.send(Message.PlayerSelection, { index: idx });
   }
 
   onceStateChanged(cb: (state: ITicTacToeState) => void, context?: any) {
-    this.events.once("once-state-changed", cb, context);
+    this.events.once(Events.OnceStateChange, cb, context);
   }
 
   onBoardChanged(cb: (cell: number, index: number) => void, context?: any) {
-    this.events.on("board-changed", cb, context);
+    this.events.on(Events.BoardChange, cb, context);
+  }
+
+  onPlayerTurnChanged(cb: (playerIndex: number) => void, context?: any) {
+    this.events.on(Events.PlayerTurnChange, cb, context);
   }
 }
