@@ -45,6 +45,15 @@ export default class Game extends Phaser.Scene {
           this.server?.makeSelection(idx);
         });
 
+      switch (cellState) {
+        case Cell.X:
+          this.add.star(cell.x, cell.y, 4, 4, 60, 0xff0000).setAngle(45);
+          break;
+        case Cell.O:
+          this.add.circle(cell.x, cell.y, 50, 0x0000ff);
+          break;
+      }
+
       this.cells.push({ display: cell, value: cellState });
 
       if ((idx + 1) % 3 === 0) {
@@ -58,11 +67,11 @@ export default class Game extends Phaser.Scene {
 
   private handleBoardChanged(newValue: Cell, idx: number) {
     const cell = this.cells[idx];
-    if (cell.value !== newValue) {
+    if (cell.value === Cell.Empty) {
       switch (newValue) {
         case Cell.X:
           this.add
-            .star(cell.display.x, cell.display.y, 4, 4, 60, 0x0000ff)
+            .star(cell.display.x, cell.display.y, 4, 4, 60, 0xff0000)
             .setAngle(45);
           break;
         case Cell.O:
