@@ -1,0 +1,14 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@colyseus/schema': ^1.0.45
+
+dependencies:
+  '@colyseus/schema': 1.0.45
+
+packages:
+
+  /@colyseus/schema/1.0.45:
+    resolution: {integrity: sha512-oW8126BOZMtf0ryuoarbeSnhmthEtrwsFwLVtVmam8IhrimEi9VGPs5GNMVo+rHcnUH1x+5j9MDZNaCq5h1OdA==}
+    hasBin: true
+    dev: false
