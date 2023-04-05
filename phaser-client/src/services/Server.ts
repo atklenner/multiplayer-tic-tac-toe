@@ -42,6 +42,10 @@ export default class Server {
             this.events.emit(Events.PlayerTurnChange, value);
             break;
 
+          case "winningPlayer":
+            this.events.emit(Events.PlayerWin, value);
+            break;
+
           default:
             break;
         }
@@ -80,5 +84,9 @@ export default class Server {
 
   onPlayerTurnChanged(cb: (playerIndex: number) => void, context?: any) {
     this.events.on(Events.PlayerTurnChange, cb, context);
+  }
+
+  onPlayerWon(cb: (playerIndex: number) => void, context?: any) {
+    this.events.on(Events.PlayerWin, cb, context);
   }
 }

@@ -28,6 +28,7 @@ export default class Game extends Phaser.Scene {
     server.onceStateChanged(this.createBoard, this);
     server.onBoardChanged(this.handleBoardChanged, this);
     server.onPlayerTurnChanged(this.handlePlayerTurnChanged, this);
+    server.onPlayerWon(this.handlePlayerWon, this);
   }
 
   private createBoard(state: ITicTacToeState) {
@@ -86,5 +87,13 @@ export default class Game extends Phaser.Scene {
 
   private handlePlayerTurnChanged(playerIndex: number) {
     console.log(playerIndex);
+  }
+
+  private handlePlayerWon(playerIndex: number) {
+    if (this.server?.playerIndex == playerIndex) {
+      console.log("you won!");
+    } else {
+      console.log("You LOST!");
+    }
   }
 }
