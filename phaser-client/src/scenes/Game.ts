@@ -1,9 +1,11 @@
 import Phaser from "phaser";
 import type Server from "../services/Server";
 import ITicTacToeState, { Cell } from "../../../types/ITicTacToeState";
+import { IGameOverSceneData, IGameSceneData } from "../../../types/scenes";
 
 export default class Game extends Phaser.Scene {
   private server?: Server;
+  private onGameOver?: (data: IGameOverSceneData) => void;
   private cells: { display: Phaser.GameObjects.Rectangle; value: Cell }[] = [];
 
   constructor() {
@@ -14,10 +16,11 @@ export default class Game extends Phaser.Scene {
     this.cells = [];
   }
 
-  async create(data: { server: Server }) {
-    const { server } = data;
+  async create(data: IGameSceneData) {
+    const { server, onGameOver } = data;
 
     this.server = server;
+    this.onGameOver = onGameOver;
 
     if (!this.server) {
       throw new Error("server instance missing");
@@ -86,14 +89,14 @@ export default class Game extends Phaser.Scene {
   }
 
   private handlePlayerTurnChanged(playerIndex: number) {
-    console.log(playerIndex);
+    // console.log(playerIndex);
   }
 
   private handlePlayerWon(playerIndex: number) {
-    if (this.server?.playerIndex == playerIndex) {
-      console.log("you won!");
-    } else {
-      console.log("You LOST!");
+    if (!this.onGameOver || playerIndex === -1) {
+      return;
     }
+
+    this.onGameOver({ winner: this.server.playerIndex === playerIndex });
   }
 }
