@@ -8,6 +8,7 @@ export default class TicTacToe extends Room<TicTacToeState> {
   private dispatcher = new Dispatcher(this);
 
   onCreate() {
+    this.maxClients = 2;
     this.setState(new TicTacToeState());
 
     this.onMessage(Message.PlayerSelection, (client, message) => {
