@@ -1,6 +1,6 @@
 import { Command } from "@colyseus/command";
 import { Client } from "colyseus";
-import { Cell } from "../../../types/ITicTacToeState";
+import { Cell, GameState } from "../../../types/ITicTacToeState";
 import TicTacToe from "../rooms/TicTacToe";
 import CheckWinnerCommand from "./CheckWinnerCommand";
 
@@ -15,6 +15,10 @@ export default class PlayerSelectionCommand extends Command<
 > {
   execute(data: Payload) {
     const { client, index } = data;
+
+    if (this.room.state.gameState !== GameState.Playing) {
+      return;
+    }
 
     const clientIndex = this.room.clients.findIndex((c) => c.id === client.id);
 
