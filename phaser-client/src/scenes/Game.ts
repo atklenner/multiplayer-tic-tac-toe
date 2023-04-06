@@ -1,12 +1,16 @@
 import Phaser from "phaser";
 import type Server from "../services/Server";
-import ITicTacToeState, { Cell } from "../../../types/ITicTacToeState";
+import ITicTacToeState, {
+  Cell,
+  GameState,
+} from "../../../types/ITicTacToeState";
 import { IGameOverSceneData, IGameSceneData } from "../../../types/scenes";
 
 export default class Game extends Phaser.Scene {
   private server?: Server;
   private onGameOver?: (data: IGameOverSceneData) => void;
   private cells: { display: Phaser.GameObjects.Rectangle; value: Cell }[] = [];
+  private gameStateText?: Phaser.GameObjects.Text;
 
   constructor() {
     super("game");
@@ -29,9 +33,6 @@ export default class Game extends Phaser.Scene {
     await server.join();
 
     server.onceStateChanged(this.createBoard, this);
-    server.onBoardChanged(this.handleBoardChanged, this);
-    server.onPlayerTurnChanged(this.handlePlayerTurnChanged, this);
-    server.onPlayerWon(this.handlePlayerWon, this);
   }
 
   private createBoard(state: ITicTacToeState) {
@@ -67,6 +68,18 @@ export default class Game extends Phaser.Scene {
         x += cellSize + cellGap;
       }
     });
+
+    if (this.server?.gameState === GameState.WaitingForPlayers) {
+      const width = this.scale.width;
+      this.gameStateText = this.add
+        .text(width * 0.5, 50, "Waiting for opponent...")
+        .setOrigin(0.5);
+    }
+
+    this.server?.onBoardChanged(this.handleBoardChanged, this);
+    this.server?.onPlayerTurnChanged(this.handlePlayerTurnChanged, this);
+    this.server?.onPlayerWon(this.handlePlayerWon, this);
+    this.server?.onGameStateChanged(this.handleGameStateChanged, this);
   }
 
   private handleBoardChanged(newValue: Cell, idx: number) {
@@ -93,10 +106,19 @@ export default class Game extends Phaser.Scene {
   }
 
   private handlePlayerWon(playerIndex: number) {
-    if (!this.onGameOver || playerIndex === -1) {
-      return;
-    }
+    this.time.delayedCall(1000, () => {
+      if (!this.onGameOver || playerIndex === -1) {
+        return;
+      }
 
-    this.onGameOver({ winner: this.server.playerIndex === playerIndex });
+      this.onGameOver({ winner: this.server?.playerIndex === playerIndex });
+    });
+  }
+
+  private handleGameStateChanged(state: GameState) {
+    if (state === GameState.Playing && this.gameStateText) {
+      this.gameStateText.destroy();
+      this.gameStateText = undefined;
+    }
   }
 }

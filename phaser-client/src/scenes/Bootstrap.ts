@@ -14,13 +14,30 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   create() {
+    this.createNewGame();
+  }
+
+  private handleGameOver = (data: IGameOverSceneData) => {
+    this.server.leave();
+    this.scene.stop("game");
+
+    this.scene.launch("game-over", {
+      ...data,
+      onRestart: this.handleRestart,
+    });
+  };
+
+  private handleRestart = () => {
+    this.scene.stop("game-over");
+    this.scene.start("game");
+    this.createNewGame();
+  };
+
+  private createNewGame() {
     this.scene.launch("game", {
       // pass the server created when Bootstrap is init-ed to Game
       server: this.server,
-      onGameOver: (data: IGameOverSceneData) => {
-        this.scene.stop("game");
-        this.scene.launch("game-over", data);
-      },
+      onGameOver: this.handleGameOver,
     });
   }
 }
