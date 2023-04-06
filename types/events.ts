@@ -3,4 +3,5 @@ export enum Events {
   BoardChange = "board-changed",
   PlayerTurnChange = "player-turn-changed",
   PlayerWin = "player-win",
+  GameState = "game-state-changed",
 }
