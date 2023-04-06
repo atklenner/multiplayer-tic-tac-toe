@@ -1,6 +1,6 @@
 import { Client, Room } from "colyseus.js";
 import Phaser from "phaser";
-import ITicTacToeState from "../../../types/ITicTacToeState";
+import ITicTacToeState, { GameState } from "../../../types/ITicTacToeState";
 import { Schema } from "@colyseus/schema";
 import { Message } from "../../../types/messages";
 import { Events } from "../../../types/events";
@@ -14,6 +14,13 @@ export default class Server {
 
   get playerIndex() {
     return this._playerIndex;
+  }
+
+  get gameState() {
+    if (!this.room) {
+      return GameState.WaitingForPlayers;
+    }
+    return this.room.state.gameState;
   }
 
   constructor() {
@@ -46,7 +53,8 @@ export default class Server {
             this.events.emit(Events.PlayerWin, value);
             break;
 
-          default:
+          case "gameState":
+            this.events.emit(Events.GameState, value);
             break;
         }
       });
@@ -59,10 +67,19 @@ export default class Server {
     };
   }
 
+  leave() {
+    this.room?.leave();
+    this.events.removeAllListeners();
+  }
+
   makeSelection(idx: number) {
     if (!this.room) {
       // should throw an error
       console.log("there is no room");
+      return;
+    }
+
+    if (this.room.state.gameState !== GameState.Playing) {
       return;
     }
 
@@ -88,5 +105,9 @@ export default class Server {
 
   onPlayerWon(cb: (playerIndex: number) => void, context?: any) {
     this.events.on(Events.PlayerWin, cb, context);
+  }
+
+  onGameStateChanged(cb: (state: GameState) => void, context?: any) {
+    this.events.on(Events.GameState, cb, context);
   }
 }
