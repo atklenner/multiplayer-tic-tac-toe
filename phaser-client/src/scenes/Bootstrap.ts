@@ -29,7 +29,6 @@ export default class Bootstrap extends Phaser.Scene {
 
   private handleRestart = () => {
     this.scene.stop("game-over");
-    this.scene.start("game");
     this.createNewGame();
   };
 
