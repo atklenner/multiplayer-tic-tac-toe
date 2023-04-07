@@ -10,6 +10,7 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   createNewGame() {
+    this.scene.stop("starfield");
     this.scene.launch("tic-tac-toe-game");
   }
 }
