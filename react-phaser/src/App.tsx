@@ -1,21 +1,19 @@
+import { useState } from "react";
 import "./App.css";
+import Modal from "./components/Modal";
 import phaserGame from "./PhaserGame";
 import Bootstrap from "./scenes/Bootstrap";
 
-const handleClick = () => {
-  const scene = phaserGame.scene.keys.bootstrap as Bootstrap;
-  scene.increaseSpeed();
-};
-
 function App() {
+  const [viewModal, setViewModal] = useState(true);
+  const handleClick = () => {
+    const scene = phaserGame.scene.keys.bootstrap as Bootstrap;
+    setViewModal(false);
+    scene.createNewGame();
+  };
   return (
     <div className="App">
-      <div className="modal">
-        <h1>Let's Play a Game!</h1>
-        <button onClick={handleClick}>Tic-Tac-Toe</button>
-        <button>Uno</button>
-        <button>Create a Room</button>
-      </div>
+      {viewModal && <Modal handleClick={handleClick} />}
     </div>
   );
 }
