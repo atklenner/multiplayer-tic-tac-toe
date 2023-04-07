@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import Bootstrap from "./scenes/Bootstrap";
+import StarField from "./scenes/StarField";
 import TicTacToeGame from "./scenes/TicTacToeGame";
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -19,7 +20,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: true,
     },
   },
-  scene: [Bootstrap, TicTacToeGame],
+  scene: [Bootstrap, StarField, TicTacToeGame],
 };
 
 export default new Phaser.Game(config);
