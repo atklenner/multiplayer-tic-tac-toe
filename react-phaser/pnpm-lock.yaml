@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@colyseus/schema': ^1.0.45
   '@types/react': ^18.0.28
   '@types/react-dom': ^18.0.11
   '@vitejs/plugin-react': ^3.1.0
@@ -12,6 +13,7 @@ specifiers:
   vite: ^4.2.0
 
 dependencies:
+  '@colyseus/schema': 1.0.45
   colyseus.js: 0.14.13
   phaser: 3.55.2
   react: 18.2.0
