@@ -1,3 +1,5 @@
+import "./PhaserGame";
+
 function App() {
   return <div className="App"></div>;
 }
