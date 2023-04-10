@@ -3,8 +3,6 @@ import GameOver from "./components/GameOver";
 import Login from "./components/Login";
 import Modal from "./components/Modal";
 import PickAGame from "./components/PickAGame";
-import phaserGame from "./PhaserGame";
-import Bootstrap from "./scenes/Bootstrap";
 import reactStore from "./services/zustand";
 
 function App() {
