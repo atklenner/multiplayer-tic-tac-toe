@@ -18,46 +18,50 @@ export default class StarField extends Phaser.Scene {
   }
 
   init() {
-    this.stars = this.add.group();
+    // this.stars = this.add.group();
   }
 
   create() {
-    for (let i = 0; i < 512; i++) {
-      this.points.push({
-        x: Phaser.Math.Between(-this.MAX_BOUNDS, this.MAX_BOUNDS),
-        y: Phaser.Math.Between(-this.MAX_BOUNDS, this.MAX_BOUNDS),
-        z: Phaser.Math.Between(1, this.MAX_DEPTH),
-      });
-    }
+    // for (let i = 0; i < 512; i++) {
+    //   this.points.push({
+    //     x: Phaser.Math.Between(-this.MAX_BOUNDS, this.MAX_BOUNDS),
+    //     y: Phaser.Math.Between(-this.MAX_BOUNDS, this.MAX_BOUNDS),
+    //     z: Phaser.Math.Between(1, this.MAX_DEPTH),
+    //   });
+    // }
+    const { width } = this.scale;
+    this.add
+      .text(width * 0.5, 100, "imagine a beautiful star field here")
+      .setOrigin(0.5);
   }
 
   update() {
     // this isn't done correctly but I don't know Phaser well
     // enough to do it right, one day
-    const { width, height } = this.scale;
-    this.stars.clear(true, true);
-
-    for (let i = 0; i < this.points.length; i++) {
-      let point = this.points[i];
-
-      point.z -= this.speed;
-
-      if (point.z <= 0) {
-        point.x = Phaser.Math.Between(-this.MAX_BOUNDS, this.MAX_BOUNDS);
-        point.y = Phaser.Math.Between(-this.MAX_BOUNDS, this.MAX_BOUNDS);
-        point.z = this.MAX_DEPTH;
-      }
-
-      let px = point.x * (128 / point.z) + width * 0.5;
-      let py = point.y * (128 / point.z) + height * 0.5;
-      let pz = (1 - point.z / 32) * 2;
-
-      let circle = this.add.circle(px, py, pz, 0xffffff, 1 - point.z / 32);
-      this.stars.add(circle);
-    }
+    // const { width, height } = this.scale;
+    // this.stars.clear(true, true);
+    //
+    // for (let i = 0; i < this.points.length; i++) {
+    //   let point = this.points[i];
+    //
+    //   point.z -= this.speed;
+    //
+    //   if (point.z <= 0) {
+    //     point.x = Phaser.Math.Between(-this.MAX_BOUNDS, this.MAX_BOUNDS);
+    //     point.y = Phaser.Math.Between(-this.MAX_BOUNDS, this.MAX_BOUNDS);
+    //     point.z = this.MAX_DEPTH;
+    //   }
+    //
+    //   let px = point.x * (128 / point.z) + width * 0.5;
+    //   let py = point.y * (128 / point.z) + height * 0.5;
+    //   let pz = (1 - point.z / 32) * 2;
+    //
+    //   let circle = this.add.circle(px, py, pz, 0xffffff, 1 - point.z / 32);
+    //   this.stars.add(circle);
+    // }
   }
 
-  increaseSpeed() {
+  private increaseSpeed() {
     this.speed = 0.5;
   }
 }
