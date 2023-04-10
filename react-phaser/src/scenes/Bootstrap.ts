@@ -3,7 +3,9 @@ import TicTacToeServer from "../services/TicTacToeServer";
 import { IGameOverSceneData } from "../../../types/scenes";
 
 export default class Bootstrap extends Phaser.Scene {
+  private toggleGameOver: () => void;
   private server!: TicTacToeServer;
+  private currentGame: string = "";
 
   constructor() {
     super("bootstrap");
@@ -19,22 +21,24 @@ export default class Bootstrap extends Phaser.Scene {
 
   private handleGameOver = (data: IGameOverSceneData) => {
     this.server.leave();
-    this.scene.stop("game");
+    this.scene.stop(this.currentGame);
+    this.scene.launch("starfield");
+    this.toggleGameOver();
+  };
 
-    this.scene.launch("game-over", {
-      ...data,
-      onRestart: this.handleRestart,
+  handleRestart = () => {
+    this.scene.stop("starfield");
+    this.scene.launch(this.currentGame, {
+      server: this.server,
+      onGameOver: this.handleGameOver,
     });
   };
 
-  private handleRestart = () => {
-    this.scene.stop("game-over");
-    this.createNewGame();
-  };
-
-  createNewGame() {
+  createNewGame(gameId: string, toggleGameOver: () => void) {
+    this.toggleGameOver = toggleGameOver;
+    this.currentGame = gameId;
     this.scene.stop("starfield");
-    this.scene.launch("tic-tac-toe-game", {
+    this.scene.launch(gameId, {
       server: this.server,
       onGameOver: this.handleGameOver,
     });
