@@ -10,7 +10,7 @@
 //   }
 // }
 import Phaser from "phaser";
-import type Server from "../services/Server";
+import type Server from "../services/TicTacToeServer";
 import ITicTacToeState, {
   Cell,
   GameState,
@@ -24,7 +24,7 @@ export default class TicTacToeGame extends Phaser.Scene {
   private gameStateText?: Phaser.GameObjects.Text;
 
   constructor() {
-    super("game");
+    super("tic-tac-toe-game");
   }
 
   init() {
